@@ -163,9 +163,16 @@ function spin() {
         const winnerIndex =
             Math.floor(((360 - degree) % 360) / slice);
 
-        document.getElementById("result").innerHTML =
-            `🎉 អបអរសាទរ! អ្នកទទួលបាន <b>${options[winnerIndex].text}</b>`;
+        const prize = options[winnerIndex];
 
+        document.getElementById("result").innerHTML =
+            `🎉 អបអរសាទរ! អ្នកទទួលបាន <b>${prize.text}</b>`;
+
+        document.getElementById("winnerImg").src = prize.img;
+        document.getElementById("winnerText").innerText =
+            `🎉 អ្នកឈ្នះ ${prize.text}`;
+
+        document.getElementById("winnerPopup").style.display = "flex";
         spinning = false;
         hasPlayed = true;
 
