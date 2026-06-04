@@ -7,11 +7,11 @@ const options = [{
         img: "img/big.jpg"
     },
     {
-        text: "Empress 60ml",
+        text: "សាប៊ូដុសខ្លួន",
         img: "img/POUCH-REFILL_Shampoo-450ml.png"
     },
     {
-        text: "Empress 450ml",
+        text: "សាប៊ូកក់សក់",
         img: "img/Pouch-spout-60ml-Mint-Cabbage.png"
     },
     {
@@ -23,11 +23,11 @@ const options = [{
         img: "img/mockup.png"
     },
     {
-        text: "Empress 60ml",
+        text: "សាប៊ូដុសខ្លួន",
         img: "img/POUCH-REFILL_Shampoo-450ml.png"
     },
     {
-        text: "Empress 450ml",
+        text: "សាប៊ូកក់សក់",
         img: "img/Pouch-spout-60ml-Mint-Cabbage.png"
     }
 ];
@@ -86,11 +86,14 @@ function drawWheel() {
             ctx.rotate(angle);
 
             // Image
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+
             ctx.drawImage(
                 img,
-                radius * 0.42, -30,
-                60,
-                60
+                radius * 0.42, -25,
+                50,
+                50
             );
 
             // Text

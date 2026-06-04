@@ -35,8 +35,8 @@ p {
 }
 
 #wheel {
-    width: 400px;
-    height: 400px;
+    width: 500;
+    height: 500;
     border-radius: 50%;
     border: 8px solid #188f2a;
     background: white;
