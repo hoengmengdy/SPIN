@@ -126,7 +126,7 @@ function drawWheel() {
     ctx.font = "bold 28px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("SPIN", center, center);
+    ctx.fillText("LSV", center, center);
 }
 
 drawWheel();
