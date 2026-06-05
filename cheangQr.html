@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>URL to QR</title>
+</head>
+
+<body style="text-align:center; font-family: Arial;">
+
+    <h2>URL to QR Code Generator</h2>
+
+    <input id="url" type="text" placeholder="Enter URL here" style="width:300px; padding:10px;">
+    <button onclick="makeQR()">Generate QR</button>
+
+    <div id="qrcode" style="margin-top:20px;"></div>
+
+    <!-- QR library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        function makeQR() {
+            let url = document.getElementById("url").value;
+            document.getElementById("qrcode").innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), url);
+        }
+    </script>
+
+</body>
+
+</html>

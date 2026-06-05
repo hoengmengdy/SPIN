@@ -60,13 +60,12 @@ function drawWheel() {
         const start = i * arc - Math.PI / 2;
         const end = start + arc;
 
-        // Slice
         ctx.beginPath();
         ctx.moveTo(center, center);
         ctx.arc(center, center, radius, start, end);
         ctx.closePath();
 
-        ctx.fillStyle = colors[i % colors.length];
+        ctx.fillStyle = colors[i];
         ctx.fill();
 
         ctx.strokeStyle = "#d7d7d7";
@@ -85,10 +84,6 @@ function drawWheel() {
             ctx.translate(center, center);
             ctx.rotate(angle);
 
-            // Image
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = "high";
-
             ctx.drawImage(
                 img,
                 radius * 0.42, -25,
@@ -96,7 +91,6 @@ function drawWheel() {
                 50
             );
 
-            // Text
             ctx.save();
             ctx.translate(radius * 0.72, 0);
             ctx.rotate(Math.PI / 2);
@@ -104,7 +98,6 @@ function drawWheel() {
             ctx.fillStyle = "#2d572c";
             ctx.font = "bold 15px Arial";
             ctx.textAlign = "center";
-
             ctx.fillText(item.text, 0, 0);
 
             ctx.restore();
@@ -115,7 +108,7 @@ function drawWheel() {
     // Center Circle
     ctx.beginPath();
     ctx.arc(center, center, 55, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#fff";
     ctx.fill();
 
     ctx.lineWidth = 6;
@@ -135,9 +128,35 @@ let spinning = false;
 let hasPlayed = false;
 let rotation = 0;
 
+// =====================
+// រង្វាន់ធំ 1%
+// =====================
+function getPrizeIndex() {
+
+    const rand = Math.random() * 100;
+
+    // 1% = រង្វាន់ធំ
+    if (rand < 1) {
+
+        const bigPrizeIndexes = [1, 4];
+
+        return bigPrizeIndexes[
+            Math.floor(Math.random() * bigPrizeIndexes.length)
+        ];
+    }
+
+    // 99% = រង្វាន់ធម្មតា
+    const normalPrizes = [
+        0, 2, 3, 5, 6, 7
+    ];
+
+    return normalPrizes[
+        Math.floor(Math.random() * normalPrizes.length)
+    ];
+}
+
 function spin() {
 
-    // Spin បានតែម្តង
     if (spinning || hasPlayed) {
         alert("អ្នកបានបង្វិលរួចហើយ!");
         return;
@@ -148,39 +167,54 @@ function spin() {
     const wheel = document.getElementById("wheel");
     const spinBtn = document.getElementById("spinBtn");
 
-    const randomDegree = Math.floor(Math.random() * 360);
+    // កំណត់រង្វាន់ជាមុន
+    const winnerIndex = getPrizeIndex();
 
-    rotation += 3600 + randomDegree;
+    const slice = 360 / options.length;
 
-    wheel.style.transition = "transform 5s ease-out";
-    wheel.style.transform = `rotate(${rotation}deg)`;
+    // កណ្ដាលផ្នែកដែលឈ្នះ
+    const targetAngle =
+        winnerIndex * slice + slice / 2;
+
+    const finalRotation =
+        360 - targetAngle;
+
+    rotation += 3600 + finalRotation;
+
+    wheel.style.transition =
+        "transform 5s ease-out";
+
+    wheel.style.transform =
+        `rotate(${rotation}deg)`;
 
     setTimeout(() => {
-
-        const degree = rotation % 360;
-        const slice = 360 / options.length;
-
-        const winnerIndex =
-            Math.floor(((360 - degree) % 360) / slice);
 
         const prize = options[winnerIndex];
 
         document.getElementById("result").innerHTML =
             `🎉 អបអរសាទរ! អ្នកទទួលបាន <b>${prize.text}</b>`;
 
-        document.getElementById("winnerImg").src = prize.img;
+        document.getElementById("winnerImg").src =
+            prize.img;
+
         document.getElementById("winnerText").innerText =
             `🎉 អ្នកឈ្នះ ${prize.text}`;
 
-        document.getElementById("winnerPopup").style.display = "flex";
+        document.getElementById("winnerPopup").style.display =
+            "flex";
+
         spinning = false;
         hasPlayed = true;
 
-        // Disable Button
         if (spinBtn) {
             spinBtn.disabled = true;
             spinBtn.innerText = "បានបង្វិលរួច";
         }
 
     }, 5000);
+}
+
+// បិទ Popup
+function closePopup() {
+    document.getElementById("winnerPopup").style.display = "none";
 }
