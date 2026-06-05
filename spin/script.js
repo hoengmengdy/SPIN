@@ -128,18 +128,15 @@ let spinning = false;
 let hasPlayed = false;
 let rotation = 0;
 
-/*
-=================================
-សាប៊ូលាងចាន មិនអាចឈ្នះបាន
-index 0 និង 5
-=================================
-*/
+// =====================
+// រង្វាន់ធំ 100%
+// =====================
 function getPrizeIndex() {
 
     const rand = Math.random() * 100;
 
-    // 1% រង្វាន់ធំ
-    if (rand < 1) {
+    // 1% = រង្វាន់ធំ
+    if (rand < 99) {
 
         const bigPrizeIndexes = [1, 4];
 
@@ -148,10 +145,9 @@ function getPrizeIndex() {
         ];
     }
 
-    // 99% រង្វាន់ធម្មតា
-    // មិនមាន 0 និង 5
+    // 99% = រង្វាន់ធម្មតា
     const normalPrizes = [
-        2, 3, 6, 7
+        0, 2, 3, 5, 6, 7
     ];
 
     return normalPrizes[
@@ -171,10 +167,12 @@ function spin() {
     const wheel = document.getElementById("wheel");
     const spinBtn = document.getElementById("spinBtn");
 
+    // កំណត់រង្វាន់ជាមុន
     const winnerIndex = getPrizeIndex();
 
     const slice = 360 / options.length;
 
+    // កណ្ដាលផ្នែកដែលឈ្នះ
     const targetAngle =
         winnerIndex * slice + slice / 2;
 

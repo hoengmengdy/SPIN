@@ -1,0 +1,189 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Kantumruy Pro", sans-serif;
+    background: linear-gradient( 135deg, #eef9e8, #dff4d3, #cfeec4);
+    color: #0f5132;
+    overflow-x: hidden;
+}
+
+
+/* Title */
+
+h1 {
+    font-size: 3rem;
+    color: #0a7d28;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 800;
+}
+
+p {
+    color: #2d4f2d;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+
+/* Wheel */
+
+.wheel-container {
+    position: relative;
+}
+
+#wheel {
+    width: 500;
+    height: 500;
+    border-radius: 50%;
+    border: 8px solid #188f2a;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 0 30px rgba(34, 197, 94, 0.3);
+    transition: transform 5s ease-out;
+}
+
+
+/* Pointer */
+
+.pointer {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-top: 45px solid #ff1f1f;
+    z-index: 100;
+}
+
+
+/* Spin Button */
+
+#spinBtn {
+    margin-top: 25px;
+    padding: 16px 45px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient( 180deg, #58e62f, #1da81a);
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+    transition: 0.3s;
+}
+
+#spinBtn:hover {
+    transform: translateY(-3px);
+}
+
+#spinBtn:active {
+    transform: scale(0.96);
+}
+
+
+/* Result Box */
+
+#result {
+    margin-top: 25px;
+    width: 90%;
+    max-width: 420px;
+    background: #ffffff;
+    border: 2px solid #d9e8d5;
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+    color: #1f2937;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Mobile */
+
+@media (max-width: 500px) {
+    #wheel {
+        width: 320px;
+        height: 320px;
+    }
+    h1 {
+        font-size: 2.2rem;
+    }
+    p {
+        font-size: 16px;
+        padding: 0 15px;
+    }
+    #spinBtn {
+        font-size: 20px;
+        padding: 14px 35px;
+    }
+    #result {
+        font-size: 20px;
+    }
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+@media(max-width:500px) {
+    .logo {
+        width: 90px;
+    }
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .7);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    animation: pop .4s ease;
+    max-width: 320px;
+}
+
+.popup-content img {
+    width: 180px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.popup-content button {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+@keyframes pop {
+    from {
+        transform: scale(.3);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
