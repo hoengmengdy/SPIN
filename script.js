@@ -1,33 +1,17 @@
 const options = [{
-        text: "សាប៊ូលាងចាន",
-        img: "img/mockup.png"
+        text: "សូមអរគុណ🙏",
+        img: "img/thank.jpg"
     },
     {
-        text: "រង្វាន់ធំ",
-        img: "img/big.jpg"
+        text: "លើកទឹកចិត្ត",
+        img: "img/susu.png"
     },
     {
-        text: "សាប៊ូដុសខ្លួន",
-        img: "img/POUCH-REFILL_Shampoo-450ml.png"
+        text: "ផ្ការំដួល 60ml",
+        img: "img/Pouch-spout-60ml-Rumdoul-Cabbage.png"
     },
     {
-        text: "សាប៊ូកក់សក់",
-        img: "img/Pouch-spout-60ml-Mint-Cabbage.png"
-    },
-    {
-        text: "រង្វាន់ធំ",
-        img: "img/big.jpg"
-    },
-    {
-        text: "សាប៊ូលាងចាន",
-        img: "img/mockup.png"
-    },
-    {
-        text: "សាប៊ូដុសខ្លួន",
-        img: "img/POUCH-REFILL_Shampoo-450ml.png"
-    },
-    {
-        text: "សាប៊ូកក់សក់",
+        text: "ជីអង្កាម 60ml",
         img: "img/Pouch-spout-60ml-Mint-Cabbage.png"
     }
 ];
@@ -65,7 +49,7 @@ function drawWheel() {
         ctx.arc(center, center, radius, start, end);
         ctx.closePath();
 
-        ctx.fillStyle = colors[i];
+        ctx.fillStyle = colors[i % colors.length];
         ctx.fill();
 
         ctx.strokeStyle = "#d7d7d7";
@@ -92,6 +76,7 @@ function drawWheel() {
             );
 
             ctx.save();
+
             ctx.translate(radius * 0.72, 0);
             ctx.rotate(Math.PI / 2);
 
@@ -125,69 +110,33 @@ function drawWheel() {
 drawWheel();
 
 let spinning = false;
-let hasPlayed = false;
 let rotation = 0;
 
-/*
-=================================
-សាប៊ូលាងចាន មិនអាចឈ្នះបាន
-index 0 និង 5
-=================================
-*/
+// Random Prize
 function getPrizeIndex() {
-
-    const rand = Math.random() * 100;
-
-    // 1% រង្វាន់ធំ
-    if (rand < 1) {
-
-        const bigPrizeIndexes = [1, 4];
-
-        return bigPrizeIndexes[
-            Math.floor(Math.random() * bigPrizeIndexes.length)
-        ];
-    }
-
-    // 99% រង្វាន់ធម្មតា
-    // មិនមាន 0 និង 5
-    const normalPrizes = [
-        2, 3, 6, 7
-    ];
-
-    return normalPrizes[
-        Math.floor(Math.random() * normalPrizes.length)
-    ];
+    return Math.floor(Math.random() * options.length);
 }
 
 function spin() {
 
-    if (spinning || hasPlayed) {
-        alert("អ្នកបានបង្វិលរួចហើយ!");
-        return;
-    }
+    if (spinning) return;
 
     spinning = true;
 
     const wheel = document.getElementById("wheel");
-    const spinBtn = document.getElementById("spinBtn");
 
     const winnerIndex = getPrizeIndex();
 
     const slice = 360 / options.length;
 
-    const targetAngle =
-        winnerIndex * slice + slice / 2;
+    const targetAngle = winnerIndex * slice + slice / 2;
 
-    const finalRotation =
-        360 - targetAngle;
+    const finalRotation = 360 - targetAngle;
 
     rotation += 3600 + finalRotation;
 
-    wheel.style.transition =
-        "transform 5s ease-out";
-
-    wheel.style.transform =
-        `rotate(${rotation}deg)`;
+    wheel.style.transition = "transform 5s ease-out";
+    wheel.style.transform = `rotate(${rotation}deg)`;
 
     setTimeout(() => {
 
@@ -196,27 +145,19 @@ function spin() {
         document.getElementById("result").innerHTML =
             `🎉 អបអរសាទរ! អ្នកទទួលបាន <b>${prize.text}</b>`;
 
-        document.getElementById("winnerImg").src =
-            prize.img;
+        document.getElementById("winnerImg").src = prize.img;
 
-        document.getElementById("winnerText").innerText =
-            `🎉 អ្នកឈ្នះ ${prize.text}`;
+        document.getElementById("winnerText").innerHTML =
+            `🎉 អ្នកឈ្នះ <b>${prize.text}</b>`;
 
-        document.getElementById("winnerPopup").style.display =
-            "flex";
+        document.getElementById("winnerPopup").style.display = "flex";
 
         spinning = false;
-        hasPlayed = true;
-
-        if (spinBtn) {
-            spinBtn.disabled = true;
-            spinBtn.innerText = "បានបង្វិលរួច";
-        }
 
     }, 5000);
 }
 
-// បិទ Popup
+// Close Popup
 function closePopup() {
     document.getElementById("winnerPopup").style.display = "none";
 }
