@@ -1,18 +1,22 @@
 const options = [{
-        text: "សូមអរគុណ🙏",
-        img: "img/thank.jpg"
+        text: "កក់សក់ស្ពៃ 35មល ",
+        img: "img/Pouch-spout-shampoo-35ml.png"
     },
     {
-        text: "លើកទឹកចិត្ត",
-        img: "img/susu.png"
-    },
-    {
-        text: "ផ្ការំដួល 60ml",
+        text: "ដុសខ្លួនស្ពៃរំដួល 60មល ",
         img: "img/Pouch-spout-60ml-Rumdoul-Cabbage.png"
     },
     {
-        text: "ជីអង្កាម 60ml",
-        img: "img/Pouch-spout-60ml-Mint-Cabbage.png"
+        text: "លាងចានម្នាស់ 180មល",
+        img: "img/mockup.png"
+    },
+    {
+        text: "រង្វាន់ធំ",
+        img: "img/big.jpg"
+    },
+    {
+        text: "លាងចានក្រូចសើច180មល",
+        img: "img/WPS Photo(2).png"
     }
 ];
 
