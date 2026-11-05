@@ -67,19 +67,63 @@ function drawImageContained(img, x, y, boxSize) {
     ctx.drawImage(img, x - w / 2, y - h / 2, w, h);
 }
 
-// បង្រួមអក្សរ បើវែងពេកសម្រាប់ផ្នែកកង់
-function fitFont(text, maxWidth) {
-    let fontSize = 17;
-    do {
-        ctx.font = `700 ${fontSize}px ${FONT_FAMILY}`;
+const LABEL_MAX_FONT = 19;
+const LABEL_MIN_FONT = 15;
+
+function setLabelFont(fontSize) {
+    ctx.font = `700 ${fontSize}px ${FONT_FAMILY}`;
+}
+
+// ទំហំអក្សរធំបំផុតដែលសមនឹងផ្នែកកង់
+function largestFont(lines, maxWidth, minFont) {
+    let fontSize = LABEL_MAX_FONT;
+    while (fontSize > minFont) {
+        setLabelFont(fontSize);
+        if (lines.every((line) => ctx.measureText(line).width <= maxWidth)) {
+            break;
+        }
         fontSize -= 0.5;
-    } while (ctx.measureText(text).width > maxWidth && fontSize > 9);
+    }
+    return fontSize;
+}
+
+// ចែកឈ្មោះវែងជាពីរបន្ទាត់ - នៅចន្លោះពាក្យជិតកណ្ដាលបំផុត ឬមុនលេខ
+function splitLabel(text) {
+    const middle = text.length / 2;
+    let breakAt = -1;
+
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] === " " && (breakAt < 0 || Math.abs(i - middle) < Math.abs(breakAt - middle))) {
+            breakAt = i;
+        }
+    }
+
+    if (breakAt >= 0) {
+        return [text.slice(0, breakAt), text.slice(breakAt + 1)];
+    }
+
+    const digit = text.search(/\d/);
+    return digit > 0 ? [text.slice(0, digit), text.slice(digit)] : [text];
+}
+
+// ប្រើមួយបន្ទាត់បើអក្សរនៅធំល្មម បើមិនដូច្នោះទេប្រើពីរបន្ទាត់
+function layoutLabel(text, maxWidth) {
+    const oneLine = [text];
+    const fontSize = largestFont(oneLine, maxWidth, LABEL_MIN_FONT);
+    setLabelFont(fontSize);
+
+    if (ctx.measureText(text).width <= maxWidth) {
+        return { lines: oneLine, fontSize };
+    }
+
+    const lines = splitLabel(text);
+    return { lines, fontSize: largestFont(lines, maxWidth, 12) };
 }
 
 function drawWheel(images = []) {
     ctx.clearRect(0, 0, SIZE, SIZE);
 
-    const textRadius = radius * 0.84;
+    const textRadius = radius * 0.86;
     const maxTextWidth = 2 * textRadius * Math.sin(arc / 2) * 0.88;
 
     options.forEach((item, i) => {
@@ -103,17 +147,26 @@ function drawWheel(images = []) {
         ctx.translate(center, center);
         ctx.rotate(start + arc / 2 + Math.PI / 2);
 
-        // រូបរង្វាន់
+        const label = layoutLabel(item.text.trim(), maxTextWidth);
+        const twoLines = label.lines.length > 1;
+
+        // រូបរង្វាន់ - តូចជាងបន្តិច បើឈ្មោះមានពីរបន្ទាត់
         if (images[i]) {
-            drawImageContained(images[i], 0, -radius * 0.56, 92);
+            drawImageContained(
+                images[i],
+                0, -radius * (twoLines ? 0.5 : 0.56),
+                twoLines ? 74 : 92
+            );
         }
 
         // អក្សររង្វាន់
         ctx.fillStyle = "#1f4d2a";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        fitFont(item.text.trim(), maxTextWidth);
-        ctx.fillText(item.text.trim(), 0, -textRadius);
+        setLabelFont(label.fontSize);
+        label.lines.forEach((line, lineIndex) => {
+            ctx.fillText(line, 0, -textRadius + lineIndex * label.fontSize * 1.2);
+        });
 
         ctx.restore();
     });
@@ -222,15 +275,15 @@ function spin() {
 
         const result = document.getElementById("result");
         result.innerHTML =
-            `🎉 អបអរសាទរ! អ្នកទទួលបាន <b>${prize.text}</b>`;
+            `🎉 អបអរសាទរ! អ្នកទទួលបាន<br><b>${prize.text}</b>`;
         result.classList.remove("d-none");
 
         const winnerImg = document.getElementById("winnerImg");
         winnerImg.src = prize.img;
         winnerImg.alt = prize.text;
 
-        document.getElementById("winnerText").innerText =
-            `🎉 អ្នកទទួលបាន ${prize.text}`;
+        document.getElementById("winnerText").innerHTML =
+            `🎉 អ្នកទទួលបាន<br>${prize.text}`;
 
         bootstrap.Modal.getOrCreateInstance(
             document.getElementById("winnerPopup")
@@ -239,7 +292,7 @@ function spin() {
         spinning = false;
         hasPlayed = true;
 
-        spinBtn.innerText = "បានបង្វិលរួច";
+        spinBtn.classList.add("d-none"); // ប្រអប់លទ្ធផលជំនួសប៊ូតុង
     }, 5000);
 }
 
