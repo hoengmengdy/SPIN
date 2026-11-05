@@ -115,18 +115,35 @@ function drawWheel(images = []) {
     drawCenterCircle();
 }
 
-// គូររង្វង់កណ្ដាល
+// គូររង្វង់កណ្ដាល ជាមួយឡូហ្គោ
+const HUB_RADIUS = 46;
+const LOGO_CROP = { x: 95, y: 85, w: 1050, h: 600 }; // កាត់គែមសរបស់ Logo.png
+let logoImg = null;
+
 function drawCenterCircle() {
     ctx.beginPath();
-    ctx.arc(center, center, 38, 0, Math.PI * 2);
+    ctx.arc(center, center, HUB_RADIUS, 0, Math.PI * 2);
 
     ctx.fillStyle = "#ffffff";
     ctx.fill();
 
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 4;
     ctx.strokeStyle = "#188f2a";
     ctx.stroke();
 
+    if (logoImg) {
+        const w = HUB_RADIUS * 1.72;
+        const h = w * LOGO_CROP.h / LOGO_CROP.w;
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(
+            logoImg,
+            LOGO_CROP.x, LOGO_CROP.y, LOGO_CROP.w, LOGO_CROP.h,
+            center - w / 2, center - h / 2, w, h
+        );
+        return;
+    }
+
+    // បើឡូហ្គោមិនទាន់ផ្ទុក ឬផ្ទុកមិនបាន
     ctx.fillStyle = "#0b5d2b";
     ctx.font = `700 24px ${FONT_FAMILY}`;
     ctx.textAlign = "center";
@@ -143,8 +160,12 @@ const fontReady = document.fonts ?
 
 Promise.all([
     Promise.all(options.map((item) => loadImage(item.img))),
+    loadImage("Logo.png"),
     fontReady
-]).then(([images]) => drawWheel(images));
+]).then(([images, logo]) => {
+    logoImg = logo;
+    drawWheel(images);
+});
 
 let spinning = false;
 let hasPlayed = false;
