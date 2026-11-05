@@ -1,26 +1,26 @@
 // chance = ឱកាសឈ្នះជាភាគរយ (បូកសរុបគួរស្មើ 100)
 const options = [{
-        text: "កក់សក់ស្ពៃ 35មល ",
+        text: "កក់សក់ស្ពៃ  1កញ្ចប់ ",
         img: "img/Pouch-spout-shampoo-35ml.png",
         chance: 23.75
     },
     {
-        text: "ដុសខ្លួនស្ពៃរំដួល 60មល ",
+        text: "ដុសខ្លួនស្ពៃរំដួល  1កញ្ចប់  ",
         img: "img/Pouch-spout-60ml-Rumdoul-Cabbage.png",
         chance: 23.75
     },
     {
-        text: "លាងចានម្នាស់ 180មល",
+        text: "លាងចានម្នាស់ 1ដប",
         img: "img/mockup.png",
         chance: 23.75
     },
     {
-        text: "កក់សក់ ឬ ដុសខ្លួន refill ",
+        text: "កក់សក់ ឬ ដុសខ្លួន 1កញ្ចប់ ",
         img: "img/POUCH-refill-720ml-Mint-Cabbage.png",
         chance: 5
     },
     {
-        text: "លាងចានក្រូចសើច180មល",
+        text: "លាងចានក្រូចសើច 1ដប",
         img: "img/WPS Photo(2).png",
         chance: 23.75
     }
