@@ -11,8 +11,8 @@ const options = [{
         img: "img/mockup.png"
     },
     {
-        text: "រង្វាន់ធំ",
-        img: "img/big.jpg"
+        text: "កក់សក់ ឬ ដុសខ្លួន refill ",
+        img: "img/POUCH-refill-720ml-Mint-Cabbage.png"
     },
     {
         text: "លាងចានក្រូចសើច180មល",
