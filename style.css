@@ -50,10 +50,37 @@ body {
     box-shadow: 0 14px 30px rgba(17, 94, 39, 0.2);
 }
 
+/* Canvas and prize names rotate together */
+.wheel-rotor {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+}
+
 #wheel {
     display: block;
     width: 100%;
     height: 100%;
+}
+
+/* --wheel-size is set in px by script.js. The label's top edge starts at the wheel's
+   centre, turns to its slice, then moves out to the rim; long names wrap inward. */
+.wheel-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(var(--wheel-size, 340px) * 0.4);
+    margin-left: calc(var(--wheel-size, 340px) * -0.2);
+    transform-origin: 50% 0;
+    transform: rotate(var(--label-angle)) translateY(calc(var(--wheel-size, 340px) * -0.44));
+    color: #1f4d2a;
+    font-size: calc(var(--wheel-size, 340px) * 0.042);
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    text-wrap: balance;
+    pointer-events: none;
 }
 
 .pointer {

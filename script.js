@@ -67,64 +67,32 @@ function drawImageContained(img, x, y, boxSize) {
     ctx.drawImage(img, x - w / 2, y - h / 2, w, h);
 }
 
-const LABEL_MAX_FONT = 19;
-const LABEL_MIN_FONT = 15;
+// ឈ្មោះរង្វាន់ជាអក្សរ HTML (មិនគូរលើ canvas ទេ ព្រោះ iPhone បង្ហាញខុសកន្លែង)
+const rotor = document.getElementById("wheelRotor");
 
-function setLabelFont(fontSize) {
-    ctx.font = `700 ${fontSize}px ${FONT_FAMILY}`;
+options.forEach((item, i) => {
+    const label = document.createElement("div");
+    label.className = "wheel-label";
+    label.textContent = item.text.trim();
+    label.style.setProperty("--label-angle", `${(i + 0.5) * 360 / options.length}deg`);
+    rotor.appendChild(label);
+});
+
+// ទំហំអក្សរតាមទំហំកង់
+function updateWheelSize() {
+    rotor.style.setProperty("--wheel-size", `${rotor.clientWidth}px`);
 }
 
-// ទំហំអក្សរធំបំផុតដែលសមនឹងផ្នែកកង់
-function largestFont(lines, maxWidth, minFont) {
-    let fontSize = LABEL_MAX_FONT;
-    while (fontSize > minFont) {
-        setLabelFont(fontSize);
-        if (lines.every((line) => ctx.measureText(line).width <= maxWidth)) {
-            break;
-        }
-        fontSize -= 0.5;
-    }
-    return fontSize;
-}
+updateWheelSize();
 
-// ចែកឈ្មោះវែងជាពីរបន្ទាត់ - នៅចន្លោះពាក្យជិតកណ្ដាលបំផុត ឬមុនលេខ
-function splitLabel(text) {
-    const middle = text.length / 2;
-    let breakAt = -1;
-
-    for (let i = 0; i < text.length; i++) {
-        if (text[i] === " " && (breakAt < 0 || Math.abs(i - middle) < Math.abs(breakAt - middle))) {
-            breakAt = i;
-        }
-    }
-
-    if (breakAt >= 0) {
-        return [text.slice(0, breakAt), text.slice(breakAt + 1)];
-    }
-
-    const digit = text.search(/\d/);
-    return digit > 0 ? [text.slice(0, digit), text.slice(digit)] : [text];
-}
-
-// ប្រើមួយបន្ទាត់បើអក្សរនៅធំល្មម បើមិនដូច្នោះទេប្រើពីរបន្ទាត់
-function layoutLabel(text, maxWidth) {
-    const oneLine = [text];
-    const fontSize = largestFont(oneLine, maxWidth, LABEL_MIN_FONT);
-    setLabelFont(fontSize);
-
-    if (ctx.measureText(text).width <= maxWidth) {
-        return { lines: oneLine, fontSize };
-    }
-
-    const lines = splitLabel(text);
-    return { lines, fontSize: largestFont(lines, maxWidth, 12) };
+if (window.ResizeObserver) {
+    new ResizeObserver(updateWheelSize).observe(rotor);
+} else {
+    window.addEventListener("resize", updateWheelSize);
 }
 
 function drawWheel(images = []) {
     ctx.clearRect(0, 0, SIZE, SIZE);
-
-    const textRadius = radius * 0.86;
-    const maxTextWidth = 2 * textRadius * Math.sin(arc / 2) * 0.88;
 
     options.forEach((item, i) => {
         const start = i * arc - Math.PI / 2;
@@ -142,31 +110,15 @@ function drawWheel(images = []) {
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // បង្វិលទៅកណ្ដាលផ្នែក - ផ្នែកខាងលើរូប/អក្សរបែរទៅគែមកង់
+        // បង្វិលទៅកណ្ដាលផ្នែក - ផ្នែកខាងលើរូបបែរទៅគែមកង់
         ctx.save();
         ctx.translate(center, center);
         ctx.rotate(start + arc / 2 + Math.PI / 2);
 
-        const label = layoutLabel(item.text.trim(), maxTextWidth);
-        const twoLines = label.lines.length > 1;
-
-        // រូបរង្វាន់ - តូចជាងបន្តិច បើឈ្មោះមានពីរបន្ទាត់
+        // រូបរង្វាន់
         if (images[i]) {
-            drawImageContained(
-                images[i],
-                0, -radius * (twoLines ? 0.5 : 0.56),
-                twoLines ? 74 : 92
-            );
+            drawImageContained(images[i], 0, -radius * 0.46, 72);
         }
-
-        // អក្សររង្វាន់
-        ctx.fillStyle = "#1f4d2a";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        setLabelFont(label.fontSize);
-        label.lines.forEach((line, lineIndex) => {
-            ctx.fillText(line, 0, -textRadius + lineIndex * label.fontSize * 1.2);
-        });
 
         ctx.restore();
     });
@@ -210,17 +162,12 @@ function drawCenterCircle() {
     ctx.fillText("LSV", center, center);
 }
 
-// គូរភ្លាមៗ រួចគូរម្ដងទៀតពេលរូប និងពុម្ពអក្សរផ្ទុករួច
+// គូរភ្លាមៗ រួចគូរម្ដងទៀតពេលរូបផ្ទុករួច
 drawWheel();
-
-const fontReady = document.fonts ?
-    document.fonts.load(`700 16px ${FONT_FAMILY}`, "កLSV").catch(() => {}) :
-    Promise.resolve();
 
 Promise.all([
     Promise.all(options.map((item) => loadImage(item.img))),
-    loadImage("Logo.png"),
-    fontReady
+    loadImage("Logo.png")
 ]).then(([images, logo]) => {
     logoImg = logo;
     drawWheel(images);
@@ -252,7 +199,6 @@ function spin() {
 
     spinning = true;
 
-    const wheel = document.getElementById("wheel");
     const spinBtn = document.getElementById("spinBtn");
 
     spinBtn.disabled = true;
@@ -267,8 +213,8 @@ function spin() {
 
     rotation = 3600 + finalRotation;
 
-    wheel.style.transition = "transform 5s ease-out";
-    wheel.style.transform = `rotate(${rotation}deg)`;
+    rotor.style.transition = "transform 5s ease-out";
+    rotor.style.transform = `rotate(${rotation}deg)`;
 
     setTimeout(() => {
         const prize = options[winnerIndex];
