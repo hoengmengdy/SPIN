@@ -1,22 +1,28 @@
+// chance = ឱកាសឈ្នះជាភាគរយ (បូកសរុបគួរស្មើ 100)
 const options = [{
         text: "កក់សក់ស្ពៃ 35មល ",
-        img: "img/Pouch-spout-shampoo-35ml.png"
+        img: "img/Pouch-spout-shampoo-35ml.png",
+        chance: 23.75
     },
     {
         text: "ដុសខ្លួនស្ពៃរំដួល 60មល ",
-        img: "img/Pouch-spout-60ml-Rumdoul-Cabbage.png"
+        img: "img/Pouch-spout-60ml-Rumdoul-Cabbage.png",
+        chance: 23.75
     },
     {
         text: "លាងចានម្នាស់ 180មល",
-        img: "img/mockup.png"
+        img: "img/mockup.png",
+        chance: 23.75
     },
     {
         text: "កក់សក់ ឬ ដុសខ្លួន refill ",
-        img: "img/POUCH-refill-720ml-Mint-Cabbage.png"
+        img: "img/POUCH-refill-720ml-Mint-Cabbage.png",
+        chance: 5
     },
     {
         text: "លាងចានក្រូចសើច180មល",
-        img: "img/WPS Photo(2).png"
+        img: "img/WPS Photo(2).png",
+        chance: 23.75
     }
 ];
 
@@ -171,6 +177,21 @@ let spinning = false;
 let hasPlayed = false;
 let rotation = 0;
 
+// ជ្រើសរង្វាន់តាមឱកាស (chance) របស់វា
+function pickWinnerIndex() {
+    const total = options.reduce((sum, item) => sum + item.chance, 0);
+    let roll = Math.random() * total;
+
+    for (let i = 0; i < options.length; i++) {
+        roll -= options[i].chance;
+        if (roll < 0) {
+            return i;
+        }
+    }
+
+    return options.length - 1;
+}
+
 function spin() {
     if (spinning || hasPlayed) {
         return;
@@ -185,36 +206,7 @@ function spin() {
     spinBtn.innerHTML =
         '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>កំពុងបង្វិល...';
 
-    /*
-    ================================
-    1% ឈ្នះផលិតផល
-    Index 2 និង Index 3
-
-    99% ទទួលបាន
-    Index 0 និង Index 1
-    ================================
-    */
-
-    const randomNumber = Math.random() * 100;
-    let winnerIndex;
-
-    if (randomNumber < 50) {
-        // 1% ឈ្នះផលិតផល
-        const productPrizes = [2, 3];
-
-        winnerIndex =
-            productPrizes[
-                Math.floor(Math.random() * productPrizes.length)
-            ];
-    } else {
-        // 99% សូមអរគុណ ឬ លើកទឹកចិត្ត
-        const normalPrizes = [0, 1];
-
-        winnerIndex =
-            normalPrizes[
-                Math.floor(Math.random() * normalPrizes.length)
-            ];
-    }
+    const winnerIndex = pickWinnerIndex();
 
     const slice = 360 / options.length;
     const targetAngle = winnerIndex * slice + slice / 2;
